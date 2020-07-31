@@ -5,3 +5,6 @@ webpack.config.js
 deploy.sh
 .env
 .env.example
+
+Dockerfile
+docker-compose.yml

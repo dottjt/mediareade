@@ -1,7 +1,7 @@
 steps:
 
   - label: ':javascript: install packages, bby'
-    command: npm install
+    command: npm install --verbose
 
   - wait
 

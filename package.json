@@ -12,10 +12,10 @@
   ],
   "scripts": {
     "-- -- -- -- BUILD SCRIPTS -- -- -- -- ": "--",
-    "start:dev": "NODE_ENV=development npm run update && npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start:dev": "NODE_ENV=development npm run update && npx ts-node-dev ./src/index.ts --respawn --transpileOnly",
     "start:prod": "NODE_ENV=production npm run update && rm -rf dist && npx tsc",
     "-- -- -- -- TEST SCRIPTS -- -- -- -- ": "--",
-    "test:media": "NODE_ENV=development npm run update && npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
+    "test:media": "NODE_ENV=development npm run update && npx ts-node-dev ./src/testMedia.ts --respawn --transpileOnly",
     "-- -- -- -- BASH SCRIPTS -- -- -- -- ": "--",
     "update": "sh ./scripts/update.sh",
     "deploy": "sh ./scripts/deploy.sh"
@@ -45,6 +45,7 @@
     "randomcolor": "^0.5.4",
     "sharp": "^0.25.3",
     "trianglify": "^4.0.0",
+    "ts-node-dev": "^1.0.0-pre.56",
     "typescript": "^3.9.5",
     "winston": "^3.3.3",
     "xmlbuilder2": "^2.1.2",
@@ -62,7 +63,6 @@
     "ts-jest": "^26.0.0",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.0.0-pre.44",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslint": "^6.1.2",
     "webpack": "^4.43.0",

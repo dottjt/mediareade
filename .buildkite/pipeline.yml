@@ -1,0 +1,19 @@
+steps:
+
+  - label: ':javascript: install packages, bby'
+    command: npm install
+
+  - wait
+
+  - label: ':javascript: build dist'
+    command: npm run start:prod
+
+  - wait
+
+  - label: 'bump version number'
+    command: npm version patch
+
+  - wait
+
+  - label: 'publish package'
+    command: npm publish --access public

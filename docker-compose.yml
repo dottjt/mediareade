@@ -1,0 +1,7 @@
+version: '3.1'
+services:
+  datareade:
+    container_name: mediareade
+    build:
+      context: .
+      dockerfile: ./Dockerfile

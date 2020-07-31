@@ -11,13 +11,13 @@
     "dist/**/*"
   ],
   "scripts": {
-    "-- -- -- -- PACKAGE SCRIPTS -- -- -- -- ": "--",
-    "start:package:dev": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "start:package:prod": "NODE_ENV=production rm -rf dist && npx tsc",
+    "-- -- -- -- BUILD SCRIPTS -- -- -- -- ": "--",
+    "start:dev": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start:prod": "NODE_ENV=production rm -rf dist && npx tsc",
     "-- -- -- -- TEST SCRIPTS -- -- -- -- ": "--",
     "test:media": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
     "-- -- -- -- PREPARE SCRIPTS -- -- -- -- ": "--",
-    "prepublishOnly": "npm run start:package:prod",
+    "prepublishOnly": "npm run start:prod",
     "-- -- -- -- DEPLOY SCRIPTS -- -- -- -- ": "--",
     "deploy": "sh ./deploy.sh"
   },
@@ -80,7 +80,7 @@
   "homepage": "https://github.com/dottjt/datareade#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run start:package:prod && git add .",
+      "pre-commit": "",
       "pre-push": ""
     }
   },

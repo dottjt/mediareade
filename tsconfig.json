@@ -51,11 +51,6 @@
     //   "routes/*": [ "src/packages/datareade_server/routes/*" ]
     // },
     "baseUrl": "./src",
-    "paths": {
-      // "routes/*": ["packages/datareade_server/routes/*"],
-      "types/*": ["types/*"],
-      "data/*": ["data/*"],
-    },
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
@@ -72,8 +67,8 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
 
     /* Advanced Options */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    // "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/__tests__/*", "database", "deployment"]
+  "exclude": ["node_modules"]
 }

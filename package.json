@@ -1,0 +1,100 @@
+{
+  "name": "@dottjt/mediareade",
+  "version": "1.1.29",
+  "description": "Media for The Reade",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "-- -- -- -- PACKAGE SCRIPTS -- -- -- -- ": "--",
+    "start:package:dev": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start:package:prod": "NODE_ENV=production rm -rf dist && npx tsc",
+    "-- -- -- -- TEST SCRIPTS -- -- -- -- ": "--",
+    "test:media": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
+    "-- -- -- -- PREPARE SCRIPTS -- -- -- -- ": "--",
+    "prepublishOnly": "npm run start:package:prod"
+  },
+  "dependencies": {
+    "@giphy/js-fetch-api": "^1.5.9",
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^9.0.1",
+    "@types/fluent-ffmpeg": "^2.1.14",
+    "@types/fs-extra": "^8.1.1",
+    "atob": "^2.1.2",
+    "axios": "^0.19.2",
+    "base64-img": "^1.0.4",
+    "dotenv": "^8.2.0",
+    "fake-identity": "^1.0.6",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "fs-extra": "^9.0.0",
+    "jimp": "^0.12.1",
+    "jsonfile": "^6.0.1",
+    "lien": "^3.3.0",
+    "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.0",
+    "opn": "^6.0.0",
+    "r-json": "^1.2.9",
+    "randomcolor": "^0.5.4",
+    "sharp": "^0.25.3",
+    "trianglify": "^4.0.0",
+    "typescript": "^3.9.5",
+    "xmlbuilder2": "^2.1.2",
+    "youtube-api": "^2.0.10"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.13",
+    "awesome-typescript-loader": "^5.2.1",
+    "file-loader": "^6.0.0",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "lerna": "^3.22.1",
+    "nodemon": "^2.0.4",
+    "ts-jest": "^26.0.0",
+    "ts-loader": "^7.0.5",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "tslint": "^6.1.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dottjt/datareade.git"
+  },
+  "keywords": [],
+  "author": "Julius Reade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dottjt/datareade/issues"
+  },
+  "homepage": "https://github.com/dottjt/datareade#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run start:package:prod && git add .",
+      "pre-push": ""
+    }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(t|j)sx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "gitHead": "8a49875f8263761860c3c23312d009e16f91276c"
+}

@@ -1,0 +1,325 @@
+// import { Octokit } from '@octokit/rest';
+// import { GITHUB_OWNER } from './constants';
+
+// const octokit = new Octokit({
+//   auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN
+// });
+
+// // NOTE: This fundamentally does not make sense, please don't use git for dates.
+// // export const getProjectFirstLastCommitDates = async () => {
+// //   const repo = await octokit.repos.get({
+// //     owner: GITHUB_OWNER,
+// //     repo: 'juliusv1'
+// //   });
+// //   console.log(repo.data);
+// // };
+
+// https://developers.google.com/youtube/v3/guides/implementation/pagination
+// const listYouTubeVideos = () => new Promise((resolve, reject) => {
+//   Youtube.videos.list({
+//     id: TWD_CHANNEL_ID,
+//     part: 'contentDetails',
+//     order: 'date',
+//     mine: true // don't know if this does anything.
+//   }, (err: any, data: any) => {
+//     if (err) {
+//       console.log('error', err);
+//       reject(err);
+//     }
+//     console.log('Video List Retrieved.');
+//     resolve(data);
+//   });
+// });
+
+// import fse from 'fs-extra';
+// import path from 'path';
+
+// import generateGiphy from './generateGiphy';
+
+// const populateGiphy = async (): Promise<void> => {
+//   const weekDir = path.join(__dirname, '..', '..', 'data', 'twd_episodes', 'weeks');
+//   const weekDirList = await fse.readdir(weekDir);
+
+//   for (const week of weekDirList) { // [ 'week-1.ts', 'week-2.ts', 'week-3.ts', 'week-4.ts', 'week-5.ts' ]
+//     const weekFile = path.join(weekDir, week);
+//     const weekFileBuffer = await fse.readFileSync(weekFile); // week-1.ts
+//     const weekFileString = weekFileBuffer.toString();
+
+//     const weekFileArray = weekFileString.split('};').filter(entry => entry.trim() != '');
+
+//     for (const [index, weekString] of Object.entries(weekFileArray)) { // [ 'each episode within week' ]
+//       const giphyStillRegex = new RegExp(/giphy_still: ""/g); // NOTE: We assume that it doesn't have giphy_medium as well.
+
+//       const hasEmptyGiphyStill = giphyStillRegex.test(weekString as string);
+//       if (hasEmptyGiphyStill) {
+//         const tagRegex = new RegExp(/tags: \[\s*((".*").*\s*)*\],/g);
+//         const regexResult = tagRegex.exec(weekString as string);
+
+//         console.log(regexResult);
+
+//         // still need null condition to check if tag is there, if not don't do anythign or something like this.
+
+//         const doubleQuoteRegex = new RegExp(/".*"/g);
+//         const tags = doubleQuoteRegex.exec(regexResult[0]);
+//         const tag = tags[0].split('\"')[1];
+
+//         const { still, medium } = await generateGiphy(tag);
+
+//         const modifiedWeekString =
+//           (weekString as string)
+//             .replace('giphy_still: ""', `giphy_still: "${still}"`)
+//             .replace('giphy_medium: ""', `giphy_medium: "${medium}"`)
+
+//         // console.log(modifiedWeekString);
+
+//         weekFileArray[index] = weekString;
+//       }
+//     }
+//     const weekFileFinalString = weekFileArray.join('\n');
+
+//     // fse.writeFileSync(path.join(__dirname, '..', '..', 'output', `${week}-output.ts`), weekFileFinalString);
+//   }
+// };
+
+// export default populateGiphy;
+
+
+
+
+
+
+// check the
+
+import { convert } from 'xmlbuilder2';
+import axios from 'axios';
+
+import { RSSFeedItem, CuratedFeedDBItem } from '../types/feedTypes';
+
+import knexFeed from '../util/dbConnectors/knexFeed';
+
+const convertRSSFeedItemToDBFeedItem = (items: any[]): CuratedFeedDBItem[] => (
+  items.reduce((acc, item) => {
+    const itemKeys = Object.keys(item) ;
+    const newObject = {};
+
+    for (const itemKey of itemKeys) {
+      const customItem = itemKey.includes(':');
+      if (customItem) {
+        const newObjectProperty = itemKey.split(':')[1];
+
+        if (typeof item[itemKey] === 'object') {
+          if (Array.isArray(item[itemKey])) {
+            newObject[`${newObjectProperty}s`] = item[itemKey].join(',');
+          } else {
+            newObject[newObjectProperty] = '';
+          }
+        } else {
+          newObject[newObjectProperty] = item[itemKey];
+        }
+      } else {
+        if (itemKey === 'guid') {
+          newObject['id'] = item[itemKey]['#'];
+        } else {
+          if (typeof item[itemKey] === 'object') {
+            if (Array.isArray(item[itemKey])) {
+              newObject[`${itemKey}s`] = item[itemKey].join(',');
+            } else {
+              newObject[itemKey] = '';
+            }          } else {
+            newObject[itemKey] = item[itemKey];
+          }
+        }
+      }
+    }
+
+    return acc.concat(newObject);
+  }, [])
+);
+
+const addNewItemsToDB = async (itemsArray: CuratedFeedDBItem[]): Promise<CuratedFeedDBItem[]> => {
+  const newItems: CuratedFeedDBItem[] = [];
+
+  for (const item of itemsArray) {
+    const nowDate = new Date();
+    const toPublishDate = new Date(item.publishDate);
+    if (nowDate > toPublishDate) {
+      // Maybe insert them into the DB?
+      await knexFeed('curated_social_feed_items').insert({
+
+      });
+      newItems.push(item);
+    }
+  }
+
+  return newItems;
+}
+
+export const curatedFeedCheck10Minutes = async (feedId: string, feedUrl: string): Promise<CuratedFeedDBItem[]> => {
+
+  const response = await axios.get(feedUrl);
+
+  const feed: any = convert(response.data, { format: "object" });
+
+  const items: RSSFeedItem[] | undefined = feed?.rss?.channel?.item;
+  if (items) {
+    const itemsArray = Array.isArray(items) ? items : [items];
+    const itemsArrayPrettified: CuratedFeedDBItem[] = convertRSSFeedItemToDBFeedItem(itemsArray);
+
+    // get all items in db
+    const dbFeedItems: CuratedFeedDBItem[] | undefined = await knexFeed('curated_social_feed_items').where({ parent_feed_id: feedId }).select('*');
+    const dbFeedItemsFinal = dbFeedItems || []
+
+    const nonPostedItemsArray: CuratedFeedDBItem[] = itemsArrayPrettified
+      .filter((item: CuratedFeedDBItem): boolean => !dbFeedItemsFinal.find(dbFeedItem => dbFeedItem.id === item.id));
+
+      // TODO Test this.
+    console.log(itemsArrayPrettified);
+    // console.log(nonPostedItemsArray);
+
+    const newItems = await addNewItemsToDB(nonPostedItemsArray);
+
+    return newItems;
+  };
+};
+
+
+
+
+
+
+
+// const pinterestBoard = '';
+// const sizeOf = require('image-size');
+
+// // const http = require("http");
+// // const file = fs.createWriteStream("file.docx");
+
+// // http.get("http://www.example.com/test.docx", response => {
+// //   response.pipe(file);
+// // });
+
+// const sendPinterestImagePost = (text, fullImageUrl) => {
+//   try {
+//     pinterest.setUserToken(userToken);
+//     const response = pinterest.pins.createPin({
+//       board: pinterestBoard, // 'pideveloper/board-2',
+//       note: text,
+//       image_url: fullImageUrl
+//     });
+//   } catch (error) {
+//     throw new Error(`sendPinterestPost - ${error}`)
+//   }
+// }
+
+// const sendFacebookImagePost = (text, fullImageUrl) => {
+//   try {
+//     // sizeOf('images/funny-cats.png', function (err, dimensions) {
+//     //   console.log(dimensions.width, dimensions.height);
+//     // });
+
+//     const dimensions = sizeOf('images/funny-cats.png');
+//     console.log(dimensions.width, dimensions.height);
+
+//     const image = {
+//       height: '',
+//       source: '',
+//       width: '',
+//     };
+
+//     var wallPost = {
+//       message: text,
+//       images: [image]
+//     };
+
+//     // A Page access token with manage_pages and publish_pages permissions
+
+//     graph.post("/photos", wallPost, function(err, res) {
+//       // returns the post id
+//       console.log(res); // { id: xxxxx}
+//     });
+
+//     // graph.post("/feed", wallPost, function(err, res) {
+//     //   // returns the post id
+//     //   console.log(res); // { id: xxxxx}
+//     // });
+
+//   } catch (error) {
+//     throw new Error(`sendFacebookPost - ${error}`)
+//   }
+// }
+
+// const sendRedditImagePost = (text, fullImageUrl) => {
+//   try {
+//     r.getSubreddit('NeverFapDeluxe').submitLink({
+//       title: text,
+//       url: fullImageUrl,
+//     })
+//     .assignFlair({text: 'Daily Thread flair text', css_class: 'daily-thread'})
+// } catch (error) {
+//     throw new Error(`sendRedditPost - ${error}`)
+//   }
+// }
+
+// const sendTwitterImagePost = (text, fullImageUrl) => {
+//   try {
+//     var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+
+//   // T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
+//   //   console.log(data)
+//   // })
+
+//   T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+//     // now we can assign alt text to the media, for use by screen readers and
+//     // other text-based presentations and interpreters
+//     var mediaIdStr = data.media_id_string
+//     var altText = "Small flowers in a planter on a sunny balcony, blossoming."
+//     var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+
+//     T.post('media/metadata/create', meta_params, function (err, data, response) {
+//       if (!err) {
+//         // now we can reference the media and post a tweet (media will attach to the tweet)
+//         var params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
+
+//         T.post('statuses/update', params, function (err, data, response) {
+//           console.log(data)
+//         })
+//       }
+//     })
+//   })
+
+//   } catch (error) {
+//     throw new Error(`sendRedditPost - ${error}`)
+//   }
+// }
+
+// const sendTumblrImagePost = (text, fullImageUrl) => {
+// // tags in options.
+// // client.createTextPost(blogName, options, callback);
+// // client.createPhotoPost(blogName, options, callback);
+// // client.createQuotePost(blogName, options, callback);
+// // client.createLinkPost(blogName, options, callback);
+// }
+
+// const sendInstagramImagePost = (text, fullImageUrl) => {
+// //   .get('tags/search', { access_token: accessToken, q: 'paris' })
+// //   .then(data => {
+// //     console.log(data);
+// //   });
+// //   media
+// //   ?image_url=https//www.example.com/images/bronz-fonz.jpg
+// //   &caption=#BronzFonz
+
+
+// //   POST graph.facebook.com/17841405822304914/media_publish
+// //   ?creation_id=17889455560051444
+// }
+
+
+// module.export = {
+//   sendPinterestImagePost,
+//   sendFacebookImagePost,
+//   sendRedditImagePost,
+//   sendTwitterImagePost,
+//   sendTumblrImagePost,
+//   sendInstagramImagePost,
+// }

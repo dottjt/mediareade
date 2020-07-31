@@ -1,0 +1,30 @@
+{
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  // "typescript.preferences.importModuleSpecifier": "non-relative",
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+
+    "dist": true,
+    "src/packages/datareade/dist": true,
+    "src/packages/mediareade/dist": true,
+    "src/packages/datareade_server/dist": true,
+
+    "src/packages/datareade/node_modules": true,
+    "src/packages/mediareade/node_modules": true,
+    "src/packages/datareade_server/node_modules": true,
+
+    "src/packages/datareade/src/data": true,
+    "src/packages/mediareade/src/data": true,
+    // "src/packages/datareade_server/src/data": true,
+
+    "src/packages/datareade/src/types": true,
+    "src/packages/mediareade/src/types": true,
+    "src/packages/datareade_server/src/types": true
+  }
+}

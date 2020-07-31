@@ -3,7 +3,7 @@ import ffmpeg from 'fluent-ffmpeg';
 
 import { generateRandomSVGBackgroundImage } from '../../util/generateBackgroundImage';
 
-import { EpisodeData } from '../../types/episodeTypes';
+import { EpisodeData } from '@dottjt/datareade';
 
 type RenderVideoProps = {
   rootFolder: string;

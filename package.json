@@ -12,16 +12,16 @@
   ],
   "scripts": {
     "-- -- -- -- BUILD SCRIPTS -- -- -- -- ": "--",
-    "start:dev": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "start:prod": "NODE_ENV=production rm -rf dist && npx tsc",
+    "start:dev": "NODE_ENV=development npm run update && npx ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start:prod": "NODE_ENV=production npm run update && rm -rf dist && npx tsc",
     "-- -- -- -- TEST SCRIPTS -- -- -- -- ": "--",
-    "test:media": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
-    "-- -- -- -- PREPARE SCRIPTS -- -- -- -- ": "--",
-    "prepublishOnly": "npm run start:prod",
-    "-- -- -- -- DEPLOY SCRIPTS -- -- -- -- ": "--",
-    "deploy": "sh ./deploy.sh"
+    "test:media": "NODE_ENV=development npm run update && npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
+    "-- -- -- -- BASH SCRIPTS -- -- -- -- ": "--",
+    "update": "sh ./scripts/update.sh",
+    "deploy": "sh ./scripts/deploy.sh"
   },
   "dependencies": {
+    "@dottjt/datareade": "^1.1.45",
     "@giphy/js-fetch-api": "^1.5.9",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^9.0.1",
@@ -46,6 +46,7 @@
     "sharp": "^0.25.3",
     "trianglify": "^4.0.0",
     "typescript": "^3.9.5",
+    "winston": "^3.3.3",
     "xmlbuilder2": "^2.1.2",
     "youtube-api": "^2.0.10"
   },

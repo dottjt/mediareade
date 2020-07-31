@@ -1,4 +1,4 @@
-import { EpisodeData } from '../types/episodeTypes';
+import { EpisodeData } from '@dottjt/datareade';
 
 export const getEpisodeData = (episodeData: EpisodeData): any => {
   const title = episodeData.title;

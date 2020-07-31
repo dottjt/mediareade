@@ -1,4 +1,5 @@
-import { EpisodeData } from '../../types/episodeTypes';
+import { EpisodeData } from '@dottjt/datareade';
+
 import fse from 'fs-extra';
 import sharp from 'sharp';
 import path from 'path';

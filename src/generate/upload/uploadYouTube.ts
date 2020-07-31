@@ -7,7 +7,7 @@ import Logger from 'winston';
 import opn from 'opn';
 
 import { getEpisodeData } from '../../util/getEpisodeData';
-import { EpisodeData } from '../../types/episodeTypes';
+import { EpisodeData } from '@dottjt/datareade';
 
 type UploadProps = {
   title: string;

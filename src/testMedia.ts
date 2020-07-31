@@ -7,10 +7,12 @@ import nodeFetch from 'node-fetch';
 global.fetch = nodeFetch;
 
 import { media } from './index';
-import { episodeTWDList } from './data/twd_episodes/index-twd';
-import { episodeTNDDList } from './data/tndd_episodes/index-tndd';
+import { data } from '@dottjt/datareade';
 
 const generateVideoIndex = async (): Promise<void> => {
+
+  const { episodesTNDD } = data;
+
   const rootFolder = path.join(__dirname);
   const audioFolder = path.join(__dirname, 'test', 'inputAudio');
   const videoFolder = path.join(__dirname, 'test', 'output');
@@ -25,7 +27,7 @@ const generateVideoIndex = async (): Promise<void> => {
     backgroundImageFolder,
     videoFont,
     podcastLogoFile,
-    episodes: episodeTNDDList,
+    episodes: episodesTNDD,
   });
 };
 

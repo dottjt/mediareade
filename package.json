@@ -17,7 +17,9 @@
     "-- -- -- -- TEST SCRIPTS -- -- -- -- ": "--",
     "test:media": "NODE_ENV=development npx ts-node-dev --respawn --transpileOnly ./src/testMedia.ts",
     "-- -- -- -- PREPARE SCRIPTS -- -- -- -- ": "--",
-    "prepublishOnly": "npm run start:package:prod"
+    "prepublishOnly": "npm run start:package:prod",
+    "-- -- -- -- DEPLOY SCRIPTS -- -- -- -- ": "--",
+    "deploy": "sh ./deploy.sh"
   },
   "dependencies": {
     "@giphy/js-fetch-api": "^1.5.9",

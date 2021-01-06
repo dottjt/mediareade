@@ -28,7 +28,7 @@
     "@types/fluent-ffmpeg": "^2.1.14",
     "@types/fs-extra": "^8.1.1",
     "atob": "^2.1.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "base64-img": "^1.0.4",
     "dotenv": "^8.2.0",
     "fake-identity": "^1.0.6",

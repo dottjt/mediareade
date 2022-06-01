@@ -43,7 +43,7 @@
     "opn": "^6.0.0",
     "r-json": "^1.2.9",
     "randomcolor": "^0.5.4",
-    "sharp": "^0.25.3",
+    "sharp": "^0.30.5",
     "trianglify": "^4.0.0",
     "typescript": "^3.9.5",
     "winston": "^3.3.3",
